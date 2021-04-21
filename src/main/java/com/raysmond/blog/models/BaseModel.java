@@ -13,6 +13,17 @@ import java.util.Date;
  *
  * @author Raysmond
  */
+
+/**
+ * * BaseModel includes common attributes of Post, Setting, Tag, User entities *
+ * anotation @MappedSuperclass that make the entities can inherite from
+ * BaseModel
+ * 
+ * Define compareTo() to use Comparable serializable purposes: convert/serialize
+ * (writeObject(Obj)) Java Obj into a byte array that can store in file, DB,
+ * memory and other components can deserialize (readObject(Obj)) the array byte
+ * into Java Obj and read the Obj normally
+ */
 @MappedSuperclass
 public abstract class BaseModel implements Comparable<BaseModel>, Serializable {
 
@@ -27,6 +38,27 @@ public abstract class BaseModel implements Comparable<BaseModel>, Serializable {
     @Column(nullable = false)
     private ZonedDateTime updatedAt;
 
+    /**
+     * JPA callback methods to listen save/update/remove this entity by
+     * EntityManager only. JPA uses EntityManager for handling the persistence of
+     * data.
+     */
+    // @PrePersist: Thực thi trước khi entity được persist (được lưu vào database)
+    // bởi method persist()
+
+    // @PostPersist: Thực thi sau khi entity được persist
+
+    // @PostLoad: Thực thi sau khi một entity được load vào persistence context hiện
+    // tại hoặc một entity được refreshed.
+
+    // @PreUpdate: Thực thi trước khi entity được update.
+
+    // @PostUpdate: Thực thi sau khi entity được update.
+
+    // @PreRemove: Thực thi trước khi entity bị xóa khỏi database bởi method
+    // remove()
+
+    // @PostRemove: Thực thi sau khi entity bị xóa.
     @PrePersist
     public void prePersist() {
         createdAt = updatedAt = ZonedDateTime.now();

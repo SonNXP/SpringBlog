@@ -3,7 +3,7 @@ package com.raysmond.blog.models;
 import com.raysmond.blog.models.support.PostFormat;
 import com.raysmond.blog.models.support.PostStatus;
 import com.raysmond.blog.models.support.PostType;
-
+// generate the default getter/setter automatically.
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,10 +24,21 @@ import java.util.Set;
 @Table(name = "posts")
 @Getter
 @Setter
+// Caching is a mechanism to enhance the performance of a system. It is a buffer
+// memorythat lies between the application and the database. Cache memory stores
+// recently used data items in order to reduce the number of database hits as
+// much as possible.
+// https://stackoverflow.com/questions/1837651/hibernate-cache-strategy
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "postCache")
 public class Post extends BaseModel {
     private static final SimpleDateFormat SLUG_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
 
+    // In Java, one-to-one relationship (normally called association) is where an
+    // object has a reference (instance variable) of the other object.
+    // In database world, one-to-one relationship is where a table A has a special
+    // column, known as foreign-key column, referencing to the primary key column of
+    // another table B. Table A is known as child-table, whereas, the table B is
+    // known as parent-table.
     @ManyToOne
     private User user;
 
@@ -59,10 +70,9 @@ public class Post extends BaseModel {
     private PostType postType = PostType.POST;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "posts_tags",
-            joinColumns = {@JoinColumn(name = "post_id", nullable = false, updatable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "tag_id", nullable = false, updatable = false)}
-    )
+    @JoinTable(name = "posts_tags", joinColumns = {
+            @JoinColumn(name = "post_id", nullable = false, updatable = false) }, inverseJoinColumns = {
+                    @JoinColumn(name = "tag_id", nullable = false, updatable = false) })
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "tagCache")
     private Set<Tag> tags = new HashSet<>();
 

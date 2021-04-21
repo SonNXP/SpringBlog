@@ -9,3 +9,14 @@ out
 *.ipr
 *.iws
 src/main/resources/static/bower_components
+
+sourcetrail_dependencies
+*.srctrl*
+
+.VSCodeCounter
+
+.settings
+
+.classpath
+
+.project
