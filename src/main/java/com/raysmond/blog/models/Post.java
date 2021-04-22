@@ -82,8 +82,8 @@ public class Post extends BaseModel {
                     @JoinColumn(name = "tag_id", nullable = false, updatable = false) })
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "tagCache")
     // No duplicate, no order
+    
     private Set<Tag> tags = new HashSet<>();
-
     private String permalink;
 
     private Integer views = 0;
