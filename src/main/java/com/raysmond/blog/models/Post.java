@@ -20,6 +20,7 @@ import java.util.Set;
 /**
  * @author Raysmond
  */
+// A table in database
 @Entity
 @Table(name = "posts")
 @Getter
@@ -27,7 +28,7 @@ import java.util.Set;
 // Caching is a mechanism to enhance the performance of a system. It is a buffer
 // memorythat lies between the application and the database. Cache memory stores
 // recently used data items in order to reduce the number of database hits as
-// much as possible.
+// much as possible. The cache name is named "postCache"
 // https://stackoverflow.com/questions/1837651/hibernate-cache-strategy
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "postCache")
 public class Post extends BaseModel {
@@ -39,12 +40,15 @@ public class Post extends BaseModel {
     // column, known as foreign-key column, referencing to the primary key column of
     // another table B. Table A is known as child-table, whereas, the table B is
     // known as parent-table.
+    // Some posts are belong to an user - Many to One
     @ManyToOne
     private User user;
 
     @Column(nullable = false)
     private String title;
 
+    // use our custom type in our Entity class
+    // https://docs.jboss.org/hibernate/stable/core.old/reference/en/html/mapping-types.html
     @Type(type = "text")
     private String content;
 
@@ -69,11 +73,15 @@ public class Post extends BaseModel {
     @Enumerated(EnumType.STRING)
     private PostType postType = PostType.POST;
 
+    // Create a new table that contains Primary Keys (ID of this post) and Foreign
+    // keys (keys of tags) - inverseJoinColumns. This new table represents Posts and
+    // Tags relationships, easy to link each other by this table
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "posts_tags", joinColumns = {
             @JoinColumn(name = "post_id", nullable = false, updatable = false) }, inverseJoinColumns = {
                     @JoinColumn(name = "tag_id", nullable = false, updatable = false) })
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "tagCache")
+    // No duplicate, no order
     private Set<Tag> tags = new HashSet<>();
 
     private String permalink;
@@ -88,7 +96,7 @@ public class Post extends BaseModel {
         if (this.postFormat == PostFormat.MARKDOWN) {
             return renderedContent;
         }
-
+        // It will be genrated by @Getter
         return getContent();
     }
 

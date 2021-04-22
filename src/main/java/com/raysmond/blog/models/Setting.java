@@ -25,6 +25,8 @@ public class Setting extends BaseModel {
     @Column(name = "_key", unique = true, nullable = false)
     private String key;
 
+    // represent as BLOB (binary data) in the DataBase.
+    // https://stackoverflow.com/questions/29511133/what-is-the-significance-of-javax-persistence-lob-annotation-in-jpa
     @Lob
     @Column(name = "_value")
     private Serializable value;
